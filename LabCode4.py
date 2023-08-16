@@ -12,7 +12,7 @@ class Graph:
     def print_mst(self, parent):
         print("Themral Station  --  Connected to  -->  Thermal Station  Cost")
         for i in range(1, self.V):
-            print(f"    {i}         --              {parent[i]}{self.graph[i][parent[i]]}")
+            print(f"    {i}         --              {parent[i]}             {self.graph[i][parent[i]]}")
     
     def prim_mst(self):
         key = [sys.maxsize] * self.V
@@ -41,6 +41,7 @@ class Graph:
         self.print_mst(parent)
 
 #Accepting user input
+
 
 n = int(input("Enter the number of thermal power station:"))
 g = Graph(n)
