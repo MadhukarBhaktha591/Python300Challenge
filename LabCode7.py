@@ -1,49 +1,79 @@
-from collections import defaultdict
-class Graph:
-    def __init__(self, subjects):
-        self.subjects = subjects
-        self.graph = defaultdict(list)
-    def add_edge(self,subject1, subject2):
-        self.graph[subject1].append(subject2)
-        self.graph[subject2].append(subject1)
+def is_safe(board,row,col,N):
+    for i in range(col):
+        if board[row][i] == 1:
+            return False
+        
+    i = row 
+    j = col
 
-    def graph_coloring(self):
-        color_map = {}
-        available_colors = set(range(1,len(self.subjects) +1))
+    while i >= 0 and j >= 0:
+        if board[i][j] == 1:
+            return False
+        i -= 1
+        j -= 1
 
-        for subject in self.subjects:
-            used_colors = set()
+    i = row
+    j = col
 
-            for neighbor in self.graph[subject]:
-                if neighbor in color_map:
-                    used_colors.add(color_map[neighbor])
-            available_color = available_colors - used_colors
-            if available_color:
-                color_map[subject] = min(available_color)
-            else:
-                color_map[subject] = min(available_color)
-                available_colors.add(color_map[subject])
+    while j >= 0 and i < N:
+        if board[i][j] == 1:
+            return False
+        i += 1
+        j -= 1
 
-        return color_map
+    return True
 
-    def get_minimum_time_slots(self):
-        color_map = self.graph_coloring()
-        return max(color_map.values())
 
-#Example Usage
-subjects = ['Math', 'Physics', 'Chemistry', 'Biology']
-students = {
-    'Math' : ['Alice', 'Bob', 'Charlie'],
-    'Physics' : ['Alice', 'Charlie', 'David'],
-    'Chemistry' : ['Bob', 'Charlie', 'Eve'],
-    'Biology' : ['Alice', 'David', 'Eve']
-}
+def solve_n_queens_util(board, col, N, solutions):
+    if col == N:
+        solution = []
+        for i in range(N):
+            row = []
+            for j in range(N):
+                row.append(board[i][j])
+            solution.append(row)
+        solutions.append(solution)
+        return
+    
+    for i in range(N):
+        if is_safe(board, i, col, N):
+            board[i][col] = 1
+            solve_n_queens_util(board, col+1, N, solutions)
 
-graph = Graph(subjects)
-graph.add_edge('Math', 'Physics')
-graph.add_edge('Math', 'Chemistry')
-graph.add_edge('Physics', 'Chemistry')
-graph.add_edge('Physics', 'Biology')
+            board[i][col] = 0
 
-minimum_time_slots = graph.get_minimum_time_slots()
-print(f"Minimum time slots needed : {minimum_time_slots}")
+def solve_n_queens(N):
+    board = [[0] * N for _ in range(N)]
+    solutions = []
+    solve_n_queens_util(board, 0, N, solutions)
+    if len(solutions) == 0:
+        print("Not possible")
+    else:
+        for solution in solutions:
+            for row in solution:
+                for cell in row:
+                    print("Q" if cell == 1 else ".", end = " ")
+                print()
+            print()
+
+
+N = 4
+solve_n_queens(N)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
